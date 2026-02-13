@@ -21,25 +21,20 @@ stages:
         terraform -version
       displayName: Install Terraform
 
-    # Run Terraform
-    - task: AzureCLI@2
-      inputs:
-        azureSubscription: 'cross-account-appservice-deployment'
-        scriptType: bash
-        scriptLocation: inlineScript
-        inlineScript: |
-          echo "Root Directory:"
-          pwd
-          ls -la
 
-          echo "Moving to Terraform folder..."
-          cd $(tfWorkingDir)
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: 'cross-account-appservice-deployment'
+    scriptType: bash
+    scriptLocation: inlineScript
+    inlineScript: |
+      cd viziapps-poc-infra
 
-          echo "Now in:"
-          pwd
-          ls -la
+      echo "Cleaning previous terraform cache..."
+      rm -rf .terraform
+      rm -f terraform.tfstate
+      rm -f terraform.tfstate.backup
 
-          terraform init
-          terraform plan
-          terraform apply -auto-approve
-
+      terraform init -upgrade
+      terraform plan
+      terraform apply -auto-approve
