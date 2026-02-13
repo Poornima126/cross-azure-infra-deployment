@@ -1,9 +1,8 @@
 terraform {
   backend "azurerm" {
-    resource_group_name  = "rg-dev-poc-crossaccount"
-    storage_account_name = "tfstatecross12345"
+    resource_group_name  = "Dev"
+    storage_account_name = "test1302"
     container_name       = "tfstate"
     key                  = "dev.terraform.tfstate"
   }
 }
-
