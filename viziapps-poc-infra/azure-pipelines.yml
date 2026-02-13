@@ -18,7 +18,8 @@ stages:
         sudo mv terraform /usr/local/bin/
         terraform -version
       displayName: Install Terraform
-      - task: AzureCLI@2
+
+    - task: AzureCLI@2
       displayName: Run Terraform
       inputs:
         azureSubscription: 'cross-account-appservice-deployment'
@@ -37,4 +38,4 @@ stages:
 
           terraform init -reconfigure
           terraform plan
-          terraform apply -auto-approve      
+          terraform apply -auto-approve
