@@ -30,6 +30,8 @@ resource "azurerm_windows_web_app" "app" {
     application_stack {
       dotnet_version = "v6.0"
     }
+    # Add this line to explicitly disable always_on
+    always_on = false
   }
 }
 
