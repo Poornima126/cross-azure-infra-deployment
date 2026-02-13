@@ -7,25 +7,30 @@ pool:
 variables:
   workingDirectory: 'environments/dev'
 
-steps:
+stages:
 
-- task: TerraformInstaller@1
-  inputs:
-    terraformVersion: '1.5.7'
+- stage: Terraform
+  jobs:
+  - job: Deploy
+    steps:
 
-- task: TerraformTaskV4@4
-  displayName: Terraform Init
-  inputs:
-    provider: 'azurerm'
-    command: 'init'
-    workingDirectory: '$(workingDirectory)'
-    environmentServiceNameAzureRM: 'cross-account-appservice-deployment'
+    # Install Terraform
+    - script: |
+        wget https://releases.hashicorp.com/terraform/1.5.7/terraform_1.5.7_linux_amd64.zip
+        unzip terraform_1.5.7_linux_amd64.zip
+        sudo mv terraform /usr/local/bin/
+        terraform -version
+      displayName: Install Terraform
 
-- task: TerraformTaskV4@4
-  displayName: Terraform Apply
-  inputs:
-    provider: 'azurerm'
-    command: 'apply'
-    workingDirectory: '$(workingDirectory)'
-    environmentServiceNameAzureRM: 'cross-account-appservice-deployment'
-    commandOptions: '-auto-approve'
+    # Azure Login using Service Connection
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: 'cross-account-appservice-deployment'
+        scriptType: bash
+        scriptLocation: inlineScript
+        inlineScript: |
+          cd $(workingDirectory)
+
+          terraform init
+          terraform plan -out=tfplan
+          terraform apply -auto-approve
