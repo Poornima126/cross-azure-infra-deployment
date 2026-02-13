@@ -4,6 +4,9 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
+variables:
+  tfWorkingDir: 'viziapps-poc-infra'
+
 stages:
 - stage: Terraform_Deploy
   jobs:
@@ -25,7 +28,14 @@ stages:
         scriptType: bash
         scriptLocation: inlineScript
         inlineScript: |
-          echo "Current Directory:"
+          echo "Root Directory:"
+          pwd
+          ls -la
+
+          echo "Moving to Terraform folder..."
+          cd $(tfWorkingDir)
+
+          echo "Now in:"
           pwd
           ls -la
 
