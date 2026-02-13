@@ -4,9 +4,6 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-variables:
-  tfWorkingDir: 'environments/dev'
-
 stages:
 - stage: Terraform_Deploy
   jobs:
@@ -28,8 +25,6 @@ stages:
         scriptType: bash
         scriptLocation: inlineScript
         inlineScript: |
-          cd $(tfWorkingDir)
-
           echo "Current Directory:"
           pwd
           ls -la
