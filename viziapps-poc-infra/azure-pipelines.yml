@@ -27,13 +27,6 @@ stages:
         scriptLocation: inlineScript
         inlineScript: |
           cd viziapps-poc-infra
-
-          echo "Cleaning previous terraform cache..."
-          rm -rf .terraform
-          rm -f terraform.tfstate
-          rm -f terraform.tfstate.backup
-
           terraform init -reconfigure
           terraform plan
-          terraform apply -auto-approve
-
+          terraform apply -auto-approve 
