@@ -33,7 +33,7 @@ stages:
           rm -f terraform.tfstate
           rm -f terraform.tfstate.backup
 
-          terraform init -upgrade
+          terraform init -reconfigure
           terraform plan
           terraform apply -auto-approve
 
