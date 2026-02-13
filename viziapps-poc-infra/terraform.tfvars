@@ -1,4 +1,4 @@
-location               = "East US"
+location               = "central india"
 resource_group_name    = "rg-dev-poc-crossaccount"
 app_service_plan_name  = "dev-free-plan"
 app_service_name       = "devpocdotnetapp12345"
