@@ -6,36 +6,37 @@ pool:
 
 stages:
 - stage: Terraform_Deploy
-  displayName: Deploy Infrastructure
   jobs:
   - job: Deploy
-    displayName: Terraform Apply
     steps:
 
-    - script: |
-        wget https://releases.hashicorp.com/terraform/1.5.7/terraform_1.5.7_linux_amd64.zip
-        unzip terraform_1.5.7_linux_amd64.zip
-        sudo mv terraform /usr/local/bin/
-        terraform -version
-      displayName: Install Terraform
-
     - task: AzureCLI@2
-      displayName: Run Terraform
+      displayName: Install and Run Terraform
       inputs:
         azureSubscription: 'cross-account-appservice-deployment'
         scriptType: bash
         scriptLocation: inlineScript
         inlineScript: |
+          set -e
+
+          # Install Terraform
+          wget https://releases.hashicorp.com/terraform/1.5.7/terraform_1.5.7_linux_amd64.zip
+          unzip terraform_1.5.7_linux_amd64.zip
+          sudo mv terraform /usr/local/bin/
+          terraform -version
+
+          # Go to Terraform folder
           cd viziapps-poc-infra
 
-          echo "Current Directory:"
-          pwd
-          echo "Files:"
-          ls -la
-
+          # Clean any previous artifacts
           rm -rf .terraform
           rm -f .terraform.lock.hcl
 
+          # INIT (very important)
           terraform init -reconfigure
-          terraform plan
-          terraform apply -auto-approve
+
+          # PLAN
+          terraform plan -out=tfplan
+
+          # APPLY
+          terraform apply -auto-approve tfplan
