@@ -18,8 +18,7 @@ stages:
         sudo mv terraform /usr/local/bin/
         terraform -version
       displayName: Install Terraform
-
-    - task: AzureCLI@2
+      - task: AzureCLI@2
       displayName: Run Terraform
       inputs:
         azureSubscription: 'cross-account-appservice-deployment'
@@ -27,6 +26,15 @@ stages:
         scriptLocation: inlineScript
         inlineScript: |
           cd viziapps-poc-infra
+
+          echo "Current Directory:"
+          pwd
+          echo "Files:"
+          ls -la
+
+          rm -rf .terraform
+          rm -f .terraform.lock.hcl
+
           terraform init -reconfigure
           terraform plan
-          terraform apply -auto-approve 
+          terraform apply -auto-approve      
