@@ -5,11 +5,10 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-  workingDirectory: 'environments/dev'
+  tfWorkingDir: 'environments/dev'
 
 stages:
-
-- stage: Terraform
+- stage: Terraform_Deploy
   jobs:
   - job: Deploy
     steps:
@@ -22,15 +21,20 @@ stages:
         terraform -version
       displayName: Install Terraform
 
-    # Azure Login using Service Connection
+    # Run Terraform
     - task: AzureCLI@2
       inputs:
         azureSubscription: 'cross-account-appservice-deployment'
         scriptType: bash
         scriptLocation: inlineScript
         inlineScript: |
-          cd $(workingDirectory)
+          cd $(tfWorkingDir)
+
+          echo "Current Directory:"
+          pwd
+          ls -la
 
           terraform init
-          terraform plan -out=tfplan
+          terraform plan
           terraform apply -auto-approve
+
